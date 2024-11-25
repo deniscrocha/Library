@@ -1,9 +1,16 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"library.com/api/initializers"
 )
+
+func init() {
+	initializers.LoadEnvVariables()
+	initializers.ConnectToDB()
+}
 
 func getInit(context *gin.Context) {
 	greeting := "Olá, mundo!"
@@ -13,5 +20,5 @@ func getInit(context *gin.Context) {
 func main() {
 	router := gin.Default()
 	router.GET("/", getInit)
-	router.Run("localhost:8080")
+	router.Run()
 }
