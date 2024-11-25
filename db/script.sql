@@ -1,0 +1,64 @@
+use Library;
+
+DROP TABLE Genders;
+DROP TABLE BooksModels;
+DROP TABLE BooksGenders;
+DROP TABLE Books;
+DROP TABLE Users;
+DROP TABLE UsersBooks;
+
+
+CREATE TABLE Genders(
+	id INT AUTO_INCREMENT NOT NULL UNIQUE,
+	name VARCHAR(255) NOT NULL,
+	description VARCHAR(255),
+	PRIMARY KEY(id)
+);
+CREATE TABLE BooksModels(
+	id INT AUTO_INCREMENT NOT NULL UNIQUE,
+	name VARCHAR(255) NOT NULL UNIQUE,
+	release_date VARCHAR(30);
+	author VARCHAR(255),
+	language VARCHAR(255) NOT NULL,
+	quantity INT NOT NULL,
+	series: VARCHAR(255),
+	PRIMARY KEY(id)
+);
+CREATE TABLE BooksGenders(
+	id INT AUTO_INCREMENT NOT NULL UNIQUE,
+	book_model INT NOT NULL, 
+	gender INT NOT NULL,
+	UNIQUE(book_model, gender),
+	PRIMARY KEY(id),
+	FOREIGN KEY(book_model) REFERENCES BooksModels(id),
+	FOREIGN KEY(gender) REFERENCES Genders(id)
+);
+CREATE TABLE Books(
+	id INT AUTO_INCREMENT NOT NULL UNIQUE,
+	book_model INT NOT NULL,
+	status ENUM("RENTED, AVAILABLE", "DAMAGED"),
+	PRIMARY KEY(id),
+	FOREIGN KEY(book_model) REFERENCES BooksModels(id)
+);
+CREATE TABLE Users(
+	id INT AUTO_INCREMENT NOT NULL UNIQUE,
+	user_type: ENUM("BASIC", "WORKER", "ADMIN") DEFAULT "BASIC",
+	name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL UNIQUE,
+	password VARCHAR(255) NOT NULL,
+	enabled TINYINT(1) DEFAULT 1,
+	PRIMARY KEY(id)
+);
+CREATE TABLE UsersBooks(
+	id INT AUTO_INCREMENT NOT NULL UNIQUE,
+	user_id INT NOT NULL,
+	book INT NOT NULL,
+	pickup_date DATETIME NOT NULL,
+	expected_date DATETIME NOT NULL,
+	delivery_date DATETIME,
+	price FLOAT,
+	status ENUM("RENTED", "LATE", "DELIVERED"),
+	PRIMARY KEY(id),
+	FOREIGN KEY(user_id) REFERENCES Users(id),
+	FOREIGN KEY(book) REFERENCES Books(id)
+);
